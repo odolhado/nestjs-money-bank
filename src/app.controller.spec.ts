@@ -1,21 +1,25 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { RatesRepository } from './rates.repository';
+import {HttpModule} from "@nestjs/common";
 
 describe('AppController', () => {
   let app: TestingModule;
 
   beforeAll(async () => {
     app = await Test.createTestingModule({
+      imports:[HttpModule],
       controllers: [AppController],
-      providers: [AppService],
+      providers: [RatesRepository],
     }).compile();
   });
 
-  describe('getHello', () => {
-    it('should return "Hello World!"', () => {
+  describe('getCurrencies', () => {
+    it('should return currencies', () => {
       const appController = app.get<AppController>(AppController);
-      expect(appController.getHello()).toBe('Hello World!');
+      appController.getRates().then((response)=>{
+        expect(response.AUD).toBe(1.6219);
+      });
     });
   });
 });
